@@ -1,4 +1,4 @@
-package com.maven.mapreduce.join;
+package com.maven.mapreduce.union;
 
 
 import org.apache.hadoop.conf.Configured;
@@ -13,7 +13,7 @@ import org.apache.hadoop.util.ToolRunner;
 
 
 
-public class JoinDriver extends Configured implements Tool {
+public class UnionDriver extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 
@@ -29,21 +29,21 @@ public class JoinDriver extends Configured implements Tool {
 		Job job = new Job(getConf());
 		
 		
-		job.setJarByClass(JoinDriver.class);
+		job.setJarByClass(UnionDriver.class);
 		job.setJobName(this.getClass().getName());
 
-		job.setMapperClass(JoinMapper.class);
-		job.setMapperClass(JoinMapper1.class);
+		job.setMapperClass(UnionMapper.class);
+		
+		
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
-		
-		job.setReducerClass(JoinReducer.class);
+
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 
 		FileOutputFormat.setOutputPath(job, new Path(args[2]));
-	    MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, JoinMapper.class);
-	    MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, JoinMapper1.class);
+	    MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, UnionMapper.class);
+	    MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, UnionMapper.class);
 		
 		if (job.waitForCompletion(true)) {
 			return 0;
@@ -52,7 +52,7 @@ public class JoinDriver extends Configured implements Tool {
 	}
 
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new JoinDriver(), args);
+		int exitCode = ToolRunner.run(new UnionDriver(), args);
 		System.exit(exitCode);
 	}
 

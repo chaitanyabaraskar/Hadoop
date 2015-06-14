@@ -19,6 +19,6 @@ public class JoinMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		String str = value.toString();
 		String[] info = str.split(",");	
-		context.write(new Text(info[1]), value);
+		context.write(new Text(info[1] + "," + 1), value);
 	}
 }
